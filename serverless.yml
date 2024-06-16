@@ -1,0 +1,33 @@
+	
+# serverless.yml
+ 
+service: serverless-flask
+ 
+plugins:
+  - serverless-python-requirements
+  - serverless-wsgi
+  - serverless-plugin-common-excludes 
+  - serverless-plugin-include-dependencies
+ 
+custom:
+  wsgi:
+    app: app.app
+    packRequirements: false
+  pythonRequirements:
+    dockerizePip: false
+ 
+provider:
+  name: aws
+  runtime: python3.11
+  stage: dev
+  region: us-east-1
+ 
+functions:
+  app:
+    handler: wsgi.handler
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'
+
+package:
+  excludeDevDependencies: false
